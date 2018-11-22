@@ -1,5 +1,5 @@
 import React from 'react';
-import LoaderSrc from '../public/loader.gif'
+import LoaderSrc from './loader.gif'
 
 const Loader = props => (
     <div>

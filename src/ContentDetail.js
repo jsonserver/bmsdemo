@@ -16,13 +16,14 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import TextItemsList from './TextItemsList';
 
 const styles = theme => ({
     card: {
-        maxWidth: 800,
+        maxWidth: 600,
     },
     media: {
-        paddingTop: '56.25%', // 16:9
+        paddingTop: '100%', // 16:9
     },
     actions: {
         display: 'flex',
@@ -46,7 +47,25 @@ const styles = theme => ({
 });
 
 class ContentDetail extends React.Component {
-    state = { expanded: false };
+    state = {
+        item: null,
+        expanded: false,
+        fetching: false
+    };
+
+    componentDidMount() {
+        const id = this.props.match.params.id;
+        fetch(`https://jsonserver.github.io/details.json`)
+            .then(response => response.text())
+            .then((text) => {
+                let json = JSON.parse(text);
+                this.setState({
+                    item: json[id],
+                    fetching: false
+                });
+            }
+            );
+    }
 
     handleExpandClick = () => {
         this.setState(state => ({ expanded: !state.expanded }));
@@ -54,70 +73,85 @@ class ContentDetail extends React.Component {
 
     render() {
         const { classes } = this.props;
-
+        const item = this.state.item;
         return (
-            <Card className={classes.card}>
-                <CardHeader
-                    avatar={
-                        <Avatar aria-label="Recipe" className={classes.avatar}>
-                            R
-            </Avatar>
-                    }
-                    action={
-                        <IconButton>
-                            <MoreVertIcon />
-                        </IconButton>
-                    }
-                    title="What is Deep Vein Thrombosis (DVT)?"
-                    subheader="Last updated: Nov 2018"
-                />
-                <CardMedia
-                    className={classes.media}
-                    image="https://www.eliquis.co.uk/servlet/servlet.FileDownload?file=00P2000000mZPODEA4"
-                    title="Paella dish"
-                />
-                <CardContent>
-                    <Typography component="p">
-                        Deep vein thrombosis (or DVT) occurs when a blood clot (thrombus) forms in a deep vein in the body. DVTs generally occur in the lower leg, thigh or pelvic area.<br />
-                        The clot stops or restricts the normal flow of blood in the vein, leading to blood building up below the clot.
-                    </Typography>
-                </CardContent>
-                <CardActions className={classes.actions} disableActionSpacing>
-                    <IconButton aria-label="Add to favorites">
-                        <FavoriteIcon />
-                    </IconButton>
-                    <IconButton aria-label="Share">
-                        <ShareIcon />
-                    </IconButton>
-                    <IconButton
-                        className={classnames(classes.expand, {
-                            [classes.expandOpen]: this.state.expanded,
-                        })}
-                        onClick={this.handleExpandClick}
-                        aria-expanded={this.state.expanded}
-                        aria-label="Show more"
-                    >
-                        <ExpandMoreIcon />
-                    </IconButton>
-                </CardActions>
-                <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-                    <CardContent>
-                        <Typography paragraph>Symptoms</Typography>
-                        <Typography paragraph>
-                            Pain
-                        </Typography>
-                        <Typography paragraph>
-                            Tenderness
-                        </Typography>
-                        <Typography paragraph>
-                            Change in skin colour (blue/red purple) or warmth on the affected limb
-                        </Typography>
-                        <Typography>
-                            Swelling
-                        </Typography>
-                    </CardContent>
-                </Collapse>
-            </Card>
+            <div>
+                {this.state.item ? (
+                    <Card className={classes.card}>
+                        <CardHeader
+                            avatar={
+                                <Avatar aria-label="Recipe" className={classes.avatar}>
+                                    D
+                            </Avatar>
+                            }
+                            action={
+                                <IconButton>
+                                    <MoreVertIcon />
+                                </IconButton>
+                            }
+                            title={this.state.item.name}
+                            subheader="Last updated: Nov 2018"
+                        />
+                        <CardMedia
+                            className={classes.media}
+                            image={this.state.item.image}
+                            title="Paella dish"
+                        />
+                        <CardContent>
+                            <Typography component="p">
+                                {this.state.item.information}
+                            </Typography>
+                        </CardContent>
+                        <CardActions className={classes.actions} disableActionSpacing>
+                            <IconButton aria-label="Add to favorites">
+                                <FavoriteIcon />
+                            </IconButton>
+                            <IconButton aria-label="Share">
+                                <ShareIcon />
+                            </IconButton>
+                            <IconButton
+                                className={classnames(classes.expand, {
+                                    [classes.expandOpen]: this.state.expanded,
+                                })}
+                                onClick={this.handleExpandClick}
+                                aria-expanded={this.state.expanded}
+                                aria-label="Show more"
+                            >
+                                <ExpandMoreIcon />
+                            </IconButton>
+                        </CardActions>
+                        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>Causes</Typography>
+                                <ul>
+                                {
+                                    this.state.item.causes.map(causes => (
+                                        <TextItemsList item={causes} />
+                                    ))
+                                }
+                                </ul>
+                                <Typography variant="h6" gutterBottom>Symptoms</Typography>
+                                <ul>
+                                {
+                                    this.state.item.causes.map(symptoms => (
+                                        <TextItemsList item={symptoms} />
+                                    ))
+                                }
+                                </ul>
+                                <Typography variant="h6" gutterBottom>Complications</Typography>
+                                <ul>
+                                {
+                                    this.state.item.causes.map(complications => (
+                                        <TextItemsList item={complications} />
+                                    ))
+                                }
+                                </ul>
+
+                            </CardContent>
+                        </Collapse>
+                    </Card>
+                ) : "No details found"}
+            </div>
         );
     }
 }

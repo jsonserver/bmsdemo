@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import Main from './Main';
+import { Switch, Route } from 'react-router-dom';
+import ContentDetail from './ContentDetail';
+import Content from './Content';
 import SearchAppBar from './SearchAppBar';
 import './App.css';
 import 'whatwg-fetch';
@@ -9,7 +11,10 @@ class App extends Component {
     return (
       <div>
         <SearchAppBar />
-        <Main/>
+        <Switch>
+          <Route exact path="/" component={Content} />
+          <Route path="/items/:id" component={ContentDetail} />
+        </Switch>
       </div>
     );
   }

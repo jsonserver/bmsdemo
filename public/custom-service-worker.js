@@ -40,11 +40,6 @@ workbox.routing.registerRoute(
   workbox.strategies.networkFirst()
 )
 
-workbox.routing.registerRoute(
-  'https://pwademo.github.io/items/af',
-  workbox.strategies.networkFirst()
-)
-
 /*workbox.routing.registerRoute(
   'http://localhost:8000/todos',
   workbox.strategies.networkFirst(),
