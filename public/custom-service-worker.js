@@ -10,13 +10,15 @@ const bgSyncPlugin = new workbox.backgroundSync.Plugin('todoQueue', {
   maxRetentionTime: 24 * 60
 });
 
+workbox.routing.registerNavigationRoute('/index.html');
+
 workbox.routing.registerRoute(
   /\.(?:js|css|html|json)$/,
   workbox.strategies.networkFirst()
 )
 
 workbox.routing.registerRoute(
-  'http://localhost:3000',
+  'http://localhost:3000/',
   workbox.strategies.networkFirst()
 )
 
@@ -26,12 +28,7 @@ workbox.routing.registerRoute(
 )
 
 workbox.routing.registerRoute(
-  'http://localhost:3000/items/af',
-  workbox.strategies.networkFirst()
-)
-
-workbox.routing.registerRoute(
-  'https://pwademo.github.io',
+  'https://pwademo.github.io/',
   workbox.strategies.networkFirst()
 )
 
@@ -40,16 +37,14 @@ workbox.routing.registerRoute(
   workbox.strategies.networkFirst()
 )
 
-/*workbox.routing.registerRoute(
-  'http://localhost:8000/todos',
-  workbox.strategies.networkFirst(),
-  'GET'
-)
-
 workbox.routing.registerRoute(
-  'http://localhost:8000/todos',
-  workbox.strategies.networkFirst({
-    plugins: [bgSyncPlugin]
-  }),
-  'POST'
-)*/
+  new RegExp('^https://jsonserver.github.io/'),
+  workbox.strategies.cacheFirst({
+    cacheName: 'image-cache',
+    plugins: [
+      new workbox.cacheableResponse.Plugin({
+        statuses: [0, 200],
+      })
+    ]
+  })
+);
