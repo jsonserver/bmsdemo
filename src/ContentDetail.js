@@ -55,7 +55,7 @@ class ContentDetail extends React.Component {
 
     componentDidMount() {
         const id = this.props.match.params.id;
-        fetch(`https://jsonserver.github.io/details.json`)
+        fetch(`https://s3.amazonaws.com/dexa-pwa-bucket/bms/details.json`)
             .then(response => response.text())
             .then((text) => {
                 let json = JSON.parse(text);

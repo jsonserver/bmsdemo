@@ -34,7 +34,7 @@ class Content extends React.Component {
     }
 
     getItems = () => {
-        fetch(`https://jsonserver.github.io/bms.json`)
+        fetch(`https://s3.amazonaws.com/dexa-pwa-bucket/bms/list.json`)
             .then(response => response.text())
             .then((text) => {
                 let json = JSON.parse(text);
